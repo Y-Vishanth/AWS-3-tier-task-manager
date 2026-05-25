@@ -1,5 +1,7 @@
 # 🚀 AWS 3-Tier Task Manager Application
 
+![image alt](https://github.com/Y-Vishanth/AWS-3-tier-task-manager/blob/d291dfff2c4a7c3bdb68d7b8ad4612b2a755826d/3.1.jpeg)
+
 A production-style full-stack Task Manager application deployed completely on AWS using modern DevOps and Cloud technologies.
 
 This project demonstrates how a frontend, backend, and database communicate in a real-world cloud-native architecture using:
