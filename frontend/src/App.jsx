@@ -87,7 +87,7 @@ function App() {
         <div className="task-input">
           <input
             type="text"
-            placeholder="Enter a task..."
+            placeholder="Enter a task...."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
