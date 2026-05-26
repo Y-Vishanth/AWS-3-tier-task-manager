@@ -1,0 +1,73 @@
+name: Deploy Backend Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker Image
+        run: |
+          IMAGE_URI=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:latest
+          docker build -t $IMAGE_URI ./backend
+          docker push $IMAGE_URI
+
+      - name: Get Current Task Definition
+        run: |
+          aws ecs describe-task-definition \
+          --task-definition ${{ vars.ECS_TASK_DEFINITION }} \
+          --region us-east-1 > task-definition.json
+
+      - name: Update Task Definition Image
+        run: |
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_REPOSITORY }}:latest"
+
+          jq --arg IMAGE "$IMAGE_URI" \
+          '.taskDefinition.containerDefinitions[0].image = $IMAGE' task-definition.json \
+          | jq '.taskDefinition | {
+            family,
+            executionRoleArn,
+            networkMode,
+            containerDefinitions,
+            requiresCompatibilities,
+            cpu,
+            memory,
+            taskRoleArn
+          }' > new-task-def.json
+
+      - name: Register New Task Definition
+        run: |
+          aws ecs register-task-definition \
+          --cli-input-json file://new-task-def.json \
+          > task-output.json
+
+          TASK_REVISION=$(jq -r '.taskDefinition.revision' task-output.json)
+
+          echo "TASK_REVISION=$TASK_REVISION" >> $GITHUB_ENV
+
+      - name: Deploy ECS Service
+        run: |
+          aws ecs update-service \
+          --cluster ${{ vars.ECS_CLUSTER }} \
+          --service ${{ vars.ECS_SERVICE }} \
+          --task-definition "${{ vars.ECS_TASK_DEFINITION }}:$TASK_REVISION"
