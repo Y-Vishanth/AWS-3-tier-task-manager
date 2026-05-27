@@ -52,7 +52,6 @@ jobs:
             requiresCompatibilities,
             cpu,
             memory,
-            taskRoleArn
           }' > new-task-def.json
 
       - name: Register New Task Definition
