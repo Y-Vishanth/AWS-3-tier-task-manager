@@ -47,6 +47,7 @@ jobs:
           | jq '.taskDefinition | {
             family,
             executionRoleArn,
+            taskRoleArn,
             networkMode,
             containerDefinitions,
             requiresCompatibilities,
