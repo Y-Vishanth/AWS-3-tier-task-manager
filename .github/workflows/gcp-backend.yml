@@ -1,0 +1,54 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  workflow_dispatch: {}
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup GCloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest \
+            .
+
+      - name: Push Docker Image
+        run: |
+          docker push \
+            ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest
+
+      - name: Deploy Cloud Run
+        run: |
+          gcloud run deploy task-manager-backend \
+            --image ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest \
+            --region ${{ vars.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated
