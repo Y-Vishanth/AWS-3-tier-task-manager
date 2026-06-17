@@ -49,4 +49,5 @@ jobs:
           gcloud compute url-maps invalidate-cdn-cache \
             ${{ vars.URL_MAP_NAME }} \
             --path "/*" \
+            --project=${{ vars.GCP_PROJECT_ID }} \
             --async

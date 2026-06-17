@@ -3,7 +3,7 @@ name: Deploy Backend to Cloud Run
 on:
   push:
     branches:
-      - main
+      - feature/gcp
     paths:
       - 'backend/**'
   workflow_dispatch: {}
@@ -17,38 +17,42 @@ jobs:
         working-directory: backend
 
     steps:
+    # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
+    
+    # Authenticate with GCP and set up gcloud CLI
 
       - name: Authenticate GCP
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
+    # Set up gcloud CLI
 
       - name: Setup GCloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ vars.GCP_PROJECT_ID }}
-
+    # Configure Docker to use GCP Artifact Registry
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
-
-      - name: Build Docker Image
+          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
+    # Build Docker Image and 
+      - name: Build Docker Image 
         run: |
           docker build \
-            -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest \
+            -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REPO_NAME }}/${{vars.GCP_IMAGE_NAME}} \
             .
-
+    # Push Docker Image to Artifact Registry
       - name: Push Docker Image
         run: |
           docker push \
-            ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest
-
+            ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REPO_NAME }}/${{vars.GCP_IMAGE_NAME}}
+    # Deploy the Docker Image to Cloud Run
       - name: Deploy Cloud Run
         run: |
           gcloud run deploy task-manager-backend \
-            --image ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/task-manager-repo/task-manager-backend:latest \
-            --region ${{ vars.GCP_REGION }} \
+            --image ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_REPO_NAME }}/${{vars.GCP_IMAGE_NAME}} \
+            --region ${{ vars.GCP_RUN_REGION }} \
             --platform managed \
             --allow-unauthenticated
