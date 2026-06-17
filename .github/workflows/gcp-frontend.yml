@@ -10,6 +10,9 @@ on:
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
     steps:
     # Checkout the repository
       - name: Checkout Repository
