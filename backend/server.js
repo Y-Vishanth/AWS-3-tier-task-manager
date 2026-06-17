@@ -37,7 +37,7 @@ app.use(express.json());
 
 app.get('/health', (req, res) => {
   res.status(200).json({
-    status: 'backend is healthy'
+    status: 'backend is healthy - pipeline test',
   });
 });
 
