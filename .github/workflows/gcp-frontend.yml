@@ -45,7 +45,8 @@ jobs:
     # Upload the build files to GCS
       - name: Upload Build Files to GCS
         run: |
-          gsutil -m rsync -r -d dist gs://${{ vars.GCS_BUCKET_NAME }}
+          gsutil -m rsync -r -d dist gs://${{ vars.GCP_BUCKET_NAME }}
+          
     # Invalidate Cloud CDN cache to ensure the latest content is served
       - name: Invalidate Cloud CDN Cache
         run: |
