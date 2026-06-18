@@ -5,7 +5,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
 
-  const API_URL = 'https://task-manager-backend-1069097892467.europe-west1.run.app/tasks';
+  const API_URL = 'http://8.232.94.206/tasks';
 
   const fetchTasks = async () => {
     try {
