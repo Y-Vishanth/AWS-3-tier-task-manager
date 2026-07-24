@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: task-manager-backend:v1
+    container_name: backend
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb+srv://vishanthy_db_user:6309613517@task-manager-cluster.vio790t.mongodb.net/?appName=task-manager-cluster
+
+  frontend:
+    image: task-manager-frontend:v1
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend

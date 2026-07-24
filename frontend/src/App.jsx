@@ -5,7 +5,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
 
-  const API_URL = 'http://task-manager-alb-186907563.us-east-1.elb.amazonaws.com/tasks';
+  const API_URL = 'http://8.232.94.206/tasks';
 
   const fetchTasks = async () => {
     try {
