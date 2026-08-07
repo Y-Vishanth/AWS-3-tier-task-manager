@@ -5,8 +5,20 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
 
-  const API_URL = 'http://task-manager-alb-186907563.us-east-1.elb.amazonaws.com/tasks';
+// ==========================================
+// Original ECS + ALB Backend
+// Uncomment this if you want to switch back
+// ==========================================
 
+// const API_URL = 'http://task-manager-alb-186907563.us-east-1.elb.amazonaws.com/tasks';
+
+
+// ==========================================
+// AWS Lambda Function URL
+// ==========================================
+
+const API_URL = 'https://mi6ugljctvphpzxmshrl5wofue0kzfdw.lambda-url.us-east-1.on.aws/';
+  
   const fetchTasks = async () => {
     try {
       const response = await fetch(API_URL);
@@ -44,40 +56,88 @@ function App() {
   };
 
   const deleteTask = async (id) => {
-    try {
-      await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-      });
 
-      fetchTasks();
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
+  try {
+
+    // ==========================================
+    // Original Express Backend
+    // ==========================================
+
+    /*
+    await fetch(`${API_URL}/${id}`, {
+      method: 'DELETE',
+    });
+    */
+
+    // ==========================================
+    // AWS Lambda
+    // ==========================================
+
+    await fetch(`${API_URL}?id=${id}`, {
+      method: 'DELETE',
+    });
+
+    fetchTasks();
+
+  } catch (error) {
+
+    console.error('Error deleting task:', error);
+
+  }
+
+};
 
   const toggleComplete = async (task) => {
-    try {
-      await fetch(`${API_URL}/${task._id}`, {
-        method: 'PUT',
 
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  try {
 
-        body: JSON.stringify({
-          completed: !task.completed,
-        }),
-      });
+    // ==========================================
+    // Original Express Backend
+    // ==========================================
 
-      fetchTasks();
-    } catch (error) {
-      console.error('Error updating task:', error);
-    }
-  };
+    /*
+    await fetch(`${API_URL}/${task._id}`, {
 
-  useEffect(() => {
+      method: 'PUT',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        completed: !task.completed,
+      }),
+
+    });
+    */
+
+    // ==========================================
+    // AWS Lambda
+    // ==========================================
+
+    await fetch(`${API_URL}?id=${task._id}`, {
+
+      method: 'PUT',
+
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        completed: !task.completed,
+      }),
+
+    });
+
     fetchTasks();
-  }, []);
+
+  } catch (error) {
+
+    console.error('Error updating task:', error);
+
+  }
+
+};
 
   return (
     <div className="app">

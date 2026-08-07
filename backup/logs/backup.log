@@ -1,0 +1,48 @@
+2026-07-23 17:07:33 : ==================================================
+2026-07-23 17:07:33 : Backup Started
+2026-07-23 17:07:33 : mongodump found.
+2026-07-23 17:07:33 : gcloud CLI found.
+2026-07-23 17:07:42 : Authenticated as vishanthyelamarthy@gmail.com
+2026-07-23 17:07:59 : Bucket verified.
+2026-07-23 17:07:59 : Creating MongoDB backup...
+2026-07-23 17:09:59 : ==================================================
+2026-07-23 17:09:59 : Backup Started
+2026-07-23 17:09:59 : mongodump found.
+2026-07-23 17:09:59 : gcloud CLI found.
+2026-07-23 17:10:03 : Authenticated as vishanthyelamarthy@gmail.com
+2026-07-23 17:10:10 : Bucket verified.
+2026-07-23 17:10:10 : Creating MongoDB backup...
+2026-07-23 17:12:12 : ==================================================
+2026-07-23 17:12:12 : Backup Started
+2026-07-23 17:12:12 : mongodump found.
+2026-07-23 17:12:12 : gcloud CLI found.
+2026-07-23 17:12:17 : Authenticated as vishanthyelamarthy@gmail.com
+2026-07-23 17:12:24 : Bucket verified.
+2026-07-23 17:12:24 : Creating MongoDB backup...
+2026-07-23 17:12:27 : Backup created successfully.
+2026-07-23 17:12:27 : Backup Size : 1.0K
+2026-07-23 17:12:27 : Uploading backup to Google Cloud Storage...
+2026-07-23 17:12:45 : Upload successful.
+2026-07-23 17:12:51 : Upload verification successful.
+2026-07-23 17:12:52 : Local backup deleted.
+2026-07-23 17:12:52 : Backup Completed Successfully.
+2026-07-23 17:12:52 : Execution Time : 40 seconds
+2026-07-23 17:27:23 : =======================================================
+2026-07-23 17:27:23 : MongoDB Backup Started
+2026-07-23 17:27:23 : mongodump found.
+2026-07-23 17:27:23 : gcloud CLI found.
+2026-07-23 17:27:33 : Authenticated as vishanthyelamarthy@gmail.com
+2026-07-23 17:27:44 : Bucket verified.
+2026-07-23 17:27:45 : Backing up sample_mflix...
+2026-07-23 17:28:23 : Backing up test...
+2026-07-23 17:28:24 : MongoDB backup completed.
+2026-07-23 17:28:24 : Compressing backup...
+2026-07-23 17:28:38 : Archive created.
+2026-07-23 17:28:38 : Archive Size : 50M
+2026-07-23 17:28:38 : Uploading archive to Google Cloud Storage...
+2026-07-23 17:30:01 : Upload successful.
+2026-07-23 17:30:12 : Upload verification successful.
+2026-07-23 17:30:12 : Cleaning local files...
+2026-07-23 17:30:12 : Local backup removed.
+2026-07-23 17:30:13 : Backup Completed Successfully.
+2026-07-23 17:30:13 : Execution Time : 169 seconds
